@@ -1,8 +1,5 @@
 FROM node:12.8.0-alpine AS builder
 
-ARG MESSAGE_API_URL
-ENV REACT_APP_MESSAGE_API_URL=${MESSAGE_API_URL}
-
 WORKDIR /app
 
 ENV PATH /app/node_modules/.bin:$PATH
@@ -18,6 +15,14 @@ RUN yarn build
 
 FROM nginx:stable-alpine
 
+ENV ENV_MESSAGE_API_URL=${ENV_MESSAGE_API_URL}
+
+RUN apk add --no-cache bash
+
 COPY --from=builder /app/build /usr/share/nginx/html
+COPY entrypoint.sh /usr/local/bin/
+RUN ln -s /usr/local/bin/entrypoint.sh
+
 EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
+
+ENTRYPOINT [ "entrypoint.sh", "/usr/share/nginx/html"]

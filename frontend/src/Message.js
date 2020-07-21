@@ -1,6 +1,6 @@
 import React from 'react';
 
-const MESSAGE_API_URL = process.env.REACT_APP_MESSAGE_API_URL;
+const MESSAGE_API_URL = process.env.REACT_APP_MESSAGE_API_URL || '%%ENV_MESSAGE_API_URL%%';
 
 class Message extends React.Component {
     constructor(props){
